@@ -86,8 +86,13 @@ class WebSocketManager:
                 float(kline['v'])
             ]
             update_candle(self.coin_info,new_candle)
+            is_correct = check_candle_integrity(self.coin_info)
+            if not is_correct: 
+                fetch_initial_candles(self.coin_info)
+                print(f'Gap candle detected, refetching candles at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+            else:
+                print(f'New candle received: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
             calculate_features(self.coin_info)
-            print(f'New candle received: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
             if self.coin_info.in_position:
                 current_prediction_favour = open_position_logic(self.coin_info, False)
                 if not current_prediction_favour:
@@ -220,7 +225,7 @@ async def main():
         coin_info.client = ""
         coin_info.balance = 1000.0
     fetch_initial_candles(coin_info)
-    calculate_features(coin_info)
+    #calculate_features(coin_info)
     ws_manager = WebSocketManager(coin_info)
     
     try:

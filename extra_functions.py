@@ -12,8 +12,8 @@ import os
 
 TOKEN = os.environ.get(f'bot_AI_model')
 chat_id = os.environ.get(f'chat_id_AI_model')
-send_tel_messages = False  #True
-trade_real = False  #True#False  # Set to False for testing without real trades
+send_tel_messages = False #True
+trade_real = False  # Set to False for testing without real trades
 
 
 import time
@@ -30,6 +30,54 @@ def send_telegram_message_HTML(text, chat_id=chat_id, token=TOKEN):
     response = requests.post(url, data=payload, timeout=1)
     print('Debug',response)
     return
+
+def check_candle_integrity(self):
+    """Check that candles in self.df have uniform timestamp spacing (no gaps).
+
+    Returns:
+        bool: True if spacing is consistent (within a small tolerance), False if gaps/missing candles detected.
+    """
+    # Basic validations
+    if not hasattr(self, 'df') or self.df is None:
+        return False
+    if 'timestamp' not in self.df.columns:
+        return False
+    if len(self.df) < 2:
+        # Nothing to check, consider it not valid
+        return False
+
+    # Ensure timestamps are integers (ms) and sorted
+    try:
+        timestamps = self.df['timestamp'].astype('int64').values
+    except Exception:
+        return False
+
+    if not (timestamps[1:] >= timestamps[:-1]).all():
+        # Not monotonically non-decreasing -> something off
+        return False
+
+    # Compute deltas in milliseconds
+    deltas = np.diff(timestamps)
+
+    if len(deltas) == 0:
+        return False
+
+    # Most common delta (mode) is probably the expected timeframe delta
+    # Use median to be robust to outliers
+    expected_delta = int(np.median(deltas))
+
+    # Allow small tolerance (1 second = 1000 ms) for minor timing noise
+    tol = 10
+
+    # If expected_delta is zero or negative, fail
+    if expected_delta <= 0:
+        return False
+
+    # Check how many deltas deviate from expected beyond tolerance
+    bad = np.sum(np.abs(deltas - expected_delta) > tol)
+
+    # If any bad gaps present, return False
+    return bad == 0
 
 # NY trading hours: 9:30 to 16:00, Monday to Friday
 def is_ny_trading_hour(dt):
@@ -90,7 +138,7 @@ def update_candle(self,new_candle):
     return new_row
 
 def open_position_logic(self,normal_check=True):
-    self.range_value_target = self.multiplier*self.df[f'{self.prices_col_1}_{self.prices_col_2}_{self.method}_range_{self.period_lb}'].iloc[-1]
+    self.range_value_target = self.df[f'{self.prices_col_1}_{self.prices_col_2}_{self.method}_range_{self.period_lb}'].iloc[-1]
     if self.range_value_target < self.range_low_limit or self.range_value_target > self.range_top_limit:
         if not normal_check: return True
         self.in_position = False
@@ -137,13 +185,13 @@ def check_position(self, candle):
 def set_open_position(self):
     candle = fetch_candles(self.coin,self.pair_trading,'1m',1)
     if self.side == 'short':
-        open = float(candle['high'].values)
+        open = float(candle['high'].iloc[0])
         self.op = round(open + self.shift_open*self.range_value_target, self.price_presition)
         self.tp = round(self.op - self.ratio * self.range_value_target, self.price_presition) 
         self.sl = round(self.op + self.range_value_target, self.price_presition)
         self.be = round(self.op - self.fract_ratio*self.ratio * self.range_value_target, self.price_presition)
     else:  # Assuming 'long' side
-        open = float(candle['low'].values)
+        open = float(candle['low'].iloc[0])
         self.op = round(open - self.shift_open*self.range_value_target, self.price_presition)
         self.tp = round(self.op + self.ratio * self.range_value_target, self.price_presition)
         self.sl = round(self.op - self.range_value_target, self.price_presition)
@@ -152,6 +200,7 @@ def set_open_position(self):
     print(f'Placing limit order {self.side}: Open : {self.op}, TP : {self.tp}, SL : {self.sl}, Ratio : {self.ratio}, Size : {self.size}, Range Value : {self.range_value_target:.2f}. {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
     msg = f'Placing limit order {self.side}\nOpen : {self.op}\nTP : {self.tp}\nSL : {self.sl}\nSize : {self.size}'
     if send_tel_messages: send_telegram_message_HTML(msg)
+
 def add_ny_time_features(df, features_columns, use_NY_trading_hour, use_day_month):
     """Add New York time, trading hour, day, and month features."""
     if use_NY_trading_hour or use_day_month:

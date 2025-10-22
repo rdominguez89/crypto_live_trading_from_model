@@ -9,11 +9,23 @@ class def_coin:
         self.trade_real = False 
         self.training_type = input("Enter side s:short, l:long\n")
         self.path = './'
-        if self.training_type == 'l1':
-            #self.model_path = 'best_model_15m_long_ratio_3_window_6_method_avg_open_close_mx_1_period_30_std_0_shift_0.6_balj_1145_pfj_1.24_bala_1115_pfa_1.71'
-            self.model_path = 'best_model_30m_long_ratio_3_window_6_method_avg_open_close_mx_2_period_50_std_0_shift_0.7_balj_1199_pfj_1.61_bala_1070_pfa_1.40'
-        if self.training_type == 'l2':
-            self.model_path = 'best_model_30m_long_ratio_5_window_14_method_avg_open_close_mx_2_period_30_std_0_shift_0.6_balj_1124_pfj_1.49_bala_1056_pfa_1.28'
+        if self.training_type == 'l8':
+            self.model_path = 'best_model_15m_long_ratio_5_window_6_method_avg_high_low_mx_1_period_180_std_0_shift_0.7_balj_1211_pfj_1.33_bala_1196_pfa_1.56'
+        if self.training_type == 'l9':
+            self.model_path = 'best_model_15m_long_ratio_4_window_6_method_avg_high_low_mx_1_period_200_std_0_shift_0.6_balj_1201_pfj_1.40_bala_1125_pfa_1.47'
+        if self.training_type == 'l10':
+            self.model_path = 'best_model_15m_long_ratio_5_window_8_method_max_open_close_mx_1_period_50_std_0_shift_0.6_balj_1071_pfj_1.50_bala_1127_pfa_2.47'
+        if self.training_type == 'l11':
+            self.model_path = 'best_model_15m_long_ratio_5_window_4_method_max_open_close_mx_1_period_180_std_0_shift_0.7_balj_1077_pfj_1.77_bala_1115_pfa_2.89'
+        if self.training_type == 'l12':
+            self.model_path = 'best_model_30m_long_ratio_5_window_4_method_max_open_close_mx_1_period_30_std_0_shift_0.7_balj_1223_pfj_3.05_bala_1137_pfa_2.90'
+           
+        if self.training_type == 'l4':
+            self.model_path = 'best_model_30m_long_ratio_2_window_4_method_avg_high_low_mx_2_period_70_std_0_shift_0.6_balj_1094_pfj_2.77_bala_1054_pfa_1.76'
+        if self.training_type == 'l6':
+            self.model_path = 'best_model_15m_long_ratio_2_window_10_method_avg_high_low_mx_1_period_90_std_0_shift_0.7_balj_1072_pfj_1.24_bala_1071_pfa_1.47'
+        if self.training_type == 'l7':
+            self.model_path = 'best_model_30m_long_ratio_4_window_4_method_avg_high_low_mx_1_period_120_std_0_shift_0.7_balj_1054_pfj_1.28_bala_1068_pfa_1.32'
         if self.training_type == 's':
             self.model_path = 'best_model_30m_short_ratio_2_window_8_method_avg_open_close_mx_1_period_30_std_0_shift_0.7_balj_1119_pfj_1.59_bala_1124_pfa_1.69'
 
