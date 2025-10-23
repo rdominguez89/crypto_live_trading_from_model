@@ -19,7 +19,6 @@ trade_real = False  # Set to False for testing without real trades
 import time
 
 def send_telegram_message_HTML(text, chat_id=chat_id, token=TOKEN):
-    print('Debug: sending msg')
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     payload = {
         "chat_id": chat_id,
@@ -28,7 +27,6 @@ def send_telegram_message_HTML(text, chat_id=chat_id, token=TOKEN):
         "disable_web_page_preview": True
     }
     response = requests.post(url, data=payload, timeout=1)
-    print('Debug',response)
     return
 
 def check_candle_integrity(self):

@@ -2,3 +2,4 @@ _*
 models*/*
 output*
 *.txt
+*.dat
