@@ -182,14 +182,14 @@ def check_position(self, candle):
 def set_open_position(self):
     candle = fetch_candles(self.coin,self.pair_trading,'1m',1)
     if self.side == 'short':
-        open = float(candle['high'].iloc[0])
-        self.op = round(open + self.shift_open*self.range_value_target, self.price_presition)
+        open_price = float(candle['high'].iloc[0])
+        self.op = round(open_price + self.shift_open*self.range_value_target, self.price_presition)
         self.tp = round(self.op - self.ratio * self.range_value_target, self.price_presition) 
         self.sl = round(self.op + self.range_value_target, self.price_presition)
         self.be = round(self.op - self.fract_ratio*self.ratio * self.range_value_target, self.price_presition)
     else:  # Assuming 'long' side
-        open = float(candle['low'].iloc[0])
-        self.op = round(open - self.shift_open*self.range_value_target, self.price_presition)
+        open_price = float(candle['low'].iloc[0])
+        self.op = round(open_price - self.shift_open*self.range_value_target, self.price_presition)
         self.tp = round(self.op + self.ratio * self.range_value_target, self.price_presition)
         self.sl = round(self.op - self.range_value_target, self.price_presition)
         self.be = round(self.op + self.fract_ratio*self.ratio * self.range_value_target, self.price_presition)

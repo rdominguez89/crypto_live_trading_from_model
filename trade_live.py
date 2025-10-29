@@ -106,6 +106,26 @@ class WebSocketManager:
                         msg = f"Position order cancelled due to change in prediction."
                         print(msg+' Returning to main WS for new signals.', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                         if send_tel_messages: send_telegram_message_HTML(msg)
+                elif current_prediction_favour and self.coin_info.waiting_for_fill:
+                    if self.coin_info.side == 'short': new_open = round(new_candle[4] + self.coin_info.shift_open*self.coin_info.range_value_target, self.coin_info.price_presition)
+                    if self.coin_info.side == 'long': new_open = round(new_candle[4] - self.coin_info.shift_open*self.coin_info.range_value_target, self.coin_info.price_presition)
+                    if (self.coin_info.side == 'short' and new_open > self.coin_info.op) or (self.coin_info.side == 'long' and new_open < self.coin_info.op):
+                        if trade_real:
+                            self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.open_limit_order)
+                            self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.stop_loss_order)
+                        msg = f"Position order modified as it was not filled and prediction still hold."
+                        print(msg+' Updationg entry.', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                        if send_tel_messages: send_telegram_message_HTML(msg)
+                        set_open_position(self.coin_info)
+                        if trade_real:
+                            if self.coin_info.side == 'long':
+                                self.coin_info.stop_loss_order = post_stop_loss_order(self.coin_info, 'SELL')
+                                self.coin_info.open_limit_order = post_limit_order(self.coin_info, self.coin_info.op, 'BUY')
+                            else:
+                                self.coin_info.stop_loss_order = post_stop_loss_order(self.coin_info, 'BUY')
+                                self.coin_info.open_limit_order = post_limit_order(self.coin_info, self.coin_info.op, 'SELL')
+                        self.coin_info.filled, self.coin_info.moved_to_be, self.coin_info.waiting_for_fill = False, False, True
+                        print("Position order placed, 1m loop will handle tracking")
             elif not self.coin_info.in_position:
                 open_position_logic(self.coin_info)
                 if self.coin_info.in_position and not self.coin_info.waiting_for_fill:
