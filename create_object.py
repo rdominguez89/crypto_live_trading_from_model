@@ -86,7 +86,7 @@ class def_coin:
 
         # Feature names
         self.df, self.tp, self.sl, self.op = None, None, None, None
-        self.balance, self.n_win, self.n_loss = 1000.0, 0, 0
+        self.balance, self.n_win, self.n_loss = 1000.0, 2, 9
         self.size = 0
         self.filled = False
         self.first_candle = False

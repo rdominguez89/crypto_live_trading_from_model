@@ -97,7 +97,8 @@ class WebSocketManager:
                 current_prediction_favour = open_position_logic(self.coin_info, False)
                 if not current_prediction_favour:
                     print(f'Current prediction no longer favours position {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
-                    if self.coin_info.waiting_for_fill:
+                    candle = fetch_candles(self.coin_info.coin,self.coin_info.pair_trading,'1m',1)
+                    if self.coin_info.waiting_for_fill and ((self.coin_info.side == 'long' and candle[3]>self.coin_info.op) or (self.coin_info.side == 'short' and candle[2]<self.coin_info.op)):
                         #cancel order
                         if trade_real:
                             self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.open_limit_order)
