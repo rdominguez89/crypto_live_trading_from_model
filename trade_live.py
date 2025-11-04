@@ -169,13 +169,13 @@ class WebSocketManager:
                         msg = f"Position filled "
                         print(msg, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                         if send_tel_messages: send_telegram_message_HTML(msg)
-                    elif status == 'UNKNOWN':
+                    elif status == 'UNKNOWN' or status == 'CANCELLED'or status == 'CANCELED':
                         if trade_real:
                             self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.open_limit_order) # add cancel sl
                             self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.stop_loss_order)
                         self.coin_info.in_position, self.coin_info.waiting_for_fill, self.coin_info.filled = False, False, False
                         msg = f"Position order not found (user modification?), returning to wait for new entry."
-                        print(msg+' Returning to main WS for new signals.', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                        print(status,msg+' Returning to main WS for new signals.', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                         if send_tel_messages: send_telegram_message_HTML(msg) # check
                 if not self.coin_info.filled and ((self.coin_info.side == 'long' and new_candle[2] >= self.coin_info.tp) or (self.coin_info.side == 'short' and new_candle[3] <= self.coin_info.tp)):
                     #cancel order
@@ -240,10 +240,10 @@ class WebSocketManager:
 async def main():
     coin_info = def_coin()
     if trade_real:
-        coin_info.client = Client(api_key, api_secret)
-        coin_info.balance = get_asset_balance(coin_info, coin_info.pair_trading)
+        coin_info.client = Client(api_key, api_secret) # type: ignore
+        coin_info.balance = get_asset_balance(coin_info, coin_info.pair_trading) # type: ignore
     else:
-        coin_info.client = ""
+        coin_info.client = None
         coin_info.balance = 1000.0
     fetch_initial_candles(coin_info)
     #calculate_features(coin_info)

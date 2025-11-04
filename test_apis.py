@@ -32,7 +32,7 @@ def cancel_orders_test(client, coin, pair_trading, order, max_retries=5):
             return cancel_order_info
         except Exception as e:
             print(f"Error cancelling order (attempt {attempt+1}): {e}")
-            if hasattr(e, 'code') and e.code == -2011:
+            if hasattr(e, 'code') and e.code == -2011: # type: ignore
                 print("Order not found", e)
                 return []
             time.sleep(1)

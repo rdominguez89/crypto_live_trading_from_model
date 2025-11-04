@@ -78,7 +78,7 @@ class def_coin:
         self.ct =  joblib.load(f'{self.path}models/ct_{self.model_path}.pkl')
         #extract features names from ct scaler
         self.columns = self.ct.feature_names_in_.tolist()
-        self.client = ""
+        self.client = None
         self.ma_periods =  np.arange(5,201,5)
         self.periods_look_back = [10, 30, 50, 70, 90, 120, 140, 160, 180, 200]
         self.percentage = 0.01
