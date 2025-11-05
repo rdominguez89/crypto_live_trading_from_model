@@ -49,7 +49,7 @@ class def_coin:
         if match:
             self.timeframe = match.group(1)  # 15m, 30m
             self.side = match.group(2).lower()  # long, short
-            self.ratio = int(match.group(3))
+            self.ratio = round(float(match.group(3)),1)
             self.window = int(match.group(4))
             self.method = match.group(5)  # avg
             self.prices_col_1 = match.group(6)  # open
