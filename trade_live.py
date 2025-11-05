@@ -216,7 +216,8 @@ class WebSocketManager:
                     print(f"Balance: {self.coin_info.balance:.1f}, Wins: {self.coin_info.n_win}, Losses: {self.coin_info.n_loss}")
                     print("Returning to main WS for new signals.", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
                 else:
-                    print(f'Position still open at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+                    if datetime.now().minute % 5 == 0:
+                        print(f'Position still open at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
     
     async def start(self):
         self.running = True

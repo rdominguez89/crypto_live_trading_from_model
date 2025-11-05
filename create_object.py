@@ -12,6 +12,8 @@ class def_coin:
         self.path = './'
         if self.training_type == 'l8':
             self.model_path = 'best_model_15m_long_ratio_5_window_6_method_avg_high_low_mx_1_period_180_std_0_shift_0.7_balj_1211_pfj_1.33_bala_1196_pfa_1.56'
+        if self.training_type == 'l8mod':
+            self.model_path = 'best_model_15m_long_ratio_5.2_window_6_method_avg_high_low_mx_1_period_180_std_0_shift_0.85_balj_1211_pfj_1.33_bala_1196_pfa_1.56'
         if self.training_type == 'l9':
             self.model_path = 'best_model_15m_long_ratio_4_window_6_method_avg_high_low_mx_1_period_200_std_0_shift_0.6_balj_1201_pfj_1.40_bala_1125_pfa_1.47'
         if self.training_type == 'l10':
@@ -25,13 +27,19 @@ class def_coin:
             self.model_path = 'best_model_15m_long_ratio_4_window_12_method_avg_high_low_mx_2_period_70_std_0_shift_0.6_balj_1084_pfj_3.24_bala_1075_pfa_1.82'
         if self.training_type == 'l14':
             self.model_path = 'best_model_15m_long_ratio_5_window_12_method_avg_high_low_mx_2_period_90_std_0_shift_0.7_balj_1094_pfj_1.90_bala_1081_pfa_1.93'
+        if self.training_type == 'l15mod':
+            self.model_path = 'best_model_15m_long_ratio_5.9_window_14_method_avg_high_low_mx_1_period_140_std_0_shift_0.85_balj_1073_pfj_1.14_bala_1232_pfa_2.16'
 
         if self.training_type == 'l4':
             self.model_path = 'best_model_30m_long_ratio_2_window_4_method_avg_high_low_mx_2_period_70_std_0_shift_0.6_balj_1094_pfj_2.77_bala_1054_pfa_1.76'
         if self.training_type == 'l6':
             self.model_path = 'best_model_15m_long_ratio_2_window_10_method_avg_high_low_mx_1_period_90_std_0_shift_0.7_balj_1072_pfj_1.24_bala_1071_pfa_1.47'
+        if self.training_type == 'l6mod':
+            self.model_path = 'best_model_15m_long_ratio_3.2_window_10_method_avg_high_low_mx_1_period_90_std_0_shift_0.7_balj_1072_pfj_1.24_bala_1071_pfa_1.47'
         if self.training_type == 'l7':
             self.model_path = 'best_model_30m_long_ratio_4_window_4_method_avg_high_low_mx_1_period_120_std_0_shift_0.7_balj_1054_pfj_1.28_bala_1068_pfa_1.32'
+        if self.training_type == 'l7mod':
+            self.model_path = 'best_model_30m_long_ratio_6.1_window_4_method_avg_high_low_mx_1_period_120_std_0_shift_0.7_balj_1054_pfj_1.28_bala_1068_pfa_1.32'
         if self.training_type == 's1':
             self.model_path = 'best_model_30m_short_ratio_2_window_8_method_avg_open_close_mx_1_period_30_std_0_shift_0.7_balj_1119_pfj_1.59_bala_1124_pfa_1.69'
 
@@ -57,6 +65,8 @@ class def_coin:
             self.use_day_month = 'false'  # default
             self.use_NY_trading_hour = 'false'  # default
             self.fract_ratio = 0.6
+            if self.training_type == 'l7mod': self.fract_ratio = 0.4
+            if self.training_type == 'l15mod': self.fract_ratio = 0.7
             self.range_low_limit = 130
             self.range_top_limit = 2000
         else:
@@ -86,7 +96,11 @@ class def_coin:
 
         # Feature names
         self.df, self.tp, self.sl, self.op = None, None, None, None
-        self.balance, self.n_win, self.n_loss = 1000.0, 2, 9
+        self.balance, self.n_win, self.n_loss = 1000.0, 0, 0
+        if self.training_type == 'l6mod': self.n_win, self.n_loss = 5, 13
+        if self.training_type == 'l7mod': self.n_win, self.n_loss = 0, 5
+        if self.training_type == 'l8mod': self.n_win, self.n_loss = 0, 4
+        if self.training_type == 'l15mod': self.n_win, self.n_loss = 0, 3
         self.size = 0
         self.filled = False
         self.first_candle = False
