@@ -62,7 +62,7 @@ class def_coin:
             # These fields aren't in your current model_path, so set defaults
             self.coin = 'BTC'  # or whatever default you prefer
             self.pair = 'USDT'  # or whatever default you prefer
-            self.use_day_month = 'false'  # default
+            self.use_day_month = 'None'  # default
             self.use_NY_trading_hour = True  # default
             self.fract_ratio = 0.6
             if self.training_type == 'l7mod': self.fract_ratio = 0.4
