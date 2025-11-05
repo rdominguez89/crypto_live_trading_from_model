@@ -45,7 +45,7 @@ class def_coin:
 
 
         # Updated regex pattern to match the actual model_path format
-        match = re.search(r'best_model_(\d+m)_(\w+)_ratio_(\d+)_window_(\d+)_method_(\w+)_(\w+)_(\w+)_mx_(\d+)_period_(\d+)_std_(\d+)_shift_([\d.]+)', self.model_path)
+        match = re.search(r'best_model_(\d+m)_(\w+)_ratio_([\d.]+)_window_(\d+)_method_(\w+)_(\w+)_(\w+)_mx_(\d+)_period_(\d+)_std_(\d+)_shift_([\d.]+)', self.model_path)
         if match:
             self.timeframe = match.group(1)  # 15m, 30m
             self.side = match.group(2).lower()  # long, short
