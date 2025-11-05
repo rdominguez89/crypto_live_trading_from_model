@@ -12,7 +12,7 @@ import os
 import time
 
 send_tel_messages = True
-trade_real = True #False  # Set to False for testing without real trades
+trade_real = False  # Set to False for testing without real trades
 
 if send_tel_messages:
     TOKEN = os.environ.get(f'bot_AI_model')
