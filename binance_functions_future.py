@@ -101,7 +101,7 @@ def cancel_orders(self, order, max_retries=5):
             return cancel_order_info
         except Exception as e:
             print(f"Error cancelling order (attempt {attempt+1}): {e}")
-            if hasattr(e, 'code') and e.code == -2011:
+            if hasattr(e, 'code') and e.code == -2011: # type: ignore
                 print("Order not found", e)
                 return []
             time.sleep(1)
@@ -115,7 +115,7 @@ def get_current_size(coin_info,n_try):
             open_pos = info
             break
     size = 0
-    if len(open_pos)!=0 and abs(float(open_pos['positionAmt']))!=0:size = round(abs(float(open_pos['positionAmt'])),coin_info.pos_presition)
+    if len(open_pos)!=0 and abs(float(open_pos['positionAmt']))!=0:size = round(abs(float(open_pos['positionAmt'])),coin_info.pos_presition) # type: ignore
     return size
 
 def get_open_orders_info(coin_info,n_try):
@@ -127,10 +127,10 @@ def get_open_orders_info(coin_info,n_try):
         if info['symbol'] == coin_info.name+coin_info.pair and info['positionSide'] == coin_info.side:
             open_pos = info
             break
-    if len(open_pos)!=0 and abs(float(open_pos['positionAmt']))!=0:
-        open_price = float(open_pos['entryPrice'])
-        size = abs(float(open_pos['positionAmt']))
-        time_post_order = open_pos['updateTime']-float(datetime.fromtimestamp(open_pos['updateTime']/1000).strftime("%M"))*60000-float(datetime.fromtimestamp(open_pos['updateTime']/1000).strftime("%S"))*1000
+    if len(open_pos)!=0 and abs(float(open_pos['positionAmt']))!=0: # type: ignore
+        open_price = float(open_pos['entryPrice']) # type: ignore
+        size = abs(float(open_pos['positionAmt'])) # type: ignore
+        time_post_order = open_pos['updateTime']-float(datetime.fromtimestamp(open_pos['updateTime']/1000).strftime("%M"))*60000-float(datetime.fromtimestamp(open_pos['updateTime']/1000).strftime("%S"))*1000 # type: ignore
         orders = get_open_orders(coin_info,n_try)
         if len(orders)!=0:
             print(f'{coin_info.side+" "+coin_info.name+coin_info.pair}: Recovering orders')

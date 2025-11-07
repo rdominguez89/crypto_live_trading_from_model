@@ -200,17 +200,18 @@ class WebSocketManager:
                         msg = f'Position closed with profit.'
                         print(msg, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                     else:
-                        self.coin_info.n_loss += 1
                         if trade_real: 
                             self.coin_info.balance = get_asset_balance(self.coin_info, self.coin_info.pair_trading)
                         else:
                             commision_sl = self.coin_info.size * self.coin_info.range_value_target * 0.0005
                             self.coin_info.balance -= (self.coin_info.size * self.coin_info.range_value_target + commision_sl)
                         if not self.coin_info.moved_to_be: 
+                            self.coin_info.n_loss += 1
                             msg = f'Position closed with loss.'
                             print(msg, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                         else: 
                             msg = f'Position closed at BE.'
+                            self.coin_info.n_be += 1
                             print(msg, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                     if send_tel_messages: send_telegram_message_HTML(msg)
                     print(f"Balance: {self.coin_info.balance:.1f}, Wins: {self.coin_info.n_win}, Losses: {self.coin_info.n_loss}")
