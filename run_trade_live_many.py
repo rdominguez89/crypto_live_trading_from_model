@@ -34,10 +34,9 @@ for k, model_option in enumerate(models):
     
     if model_option[0]=='l':side='long'
     if model_option[0]=='s':side='short'
-    number_model = model_option[1:].replace('mod','')
     command = f'python -u trade_live.py < input.txt >> {output_files[k]} 2>&1 &'
     print(command)
     os.system(command)
-    time.sleep(10)
+    if(k<len(models)-1):time.sleep(30)
 
 print("All processes started successfully!")
