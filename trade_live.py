@@ -246,7 +246,8 @@ async def main():
         coin_info.balance = get_asset_balance(coin_info, coin_info.pair_trading) # type: ignore
     else:
         coin_info.client = None
-        coin_info.balance = 1000.0
+        coin_info.balance = 1000.0 + (coin_info.n_win*coin_info.ratio - coin_info.n_loss*1.1)*10
+        print(f'Initial Balance: {coin_info.balance}')
     fetch_initial_candles(coin_info)
     #calculate_features(coin_info)
     ws_manager = WebSocketManager(coin_info)
