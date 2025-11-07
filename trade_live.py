@@ -214,7 +214,7 @@ class WebSocketManager:
                             self.coin_info.n_be += 1
                             print(msg, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                     if send_tel_messages: send_telegram_message_HTML(msg)
-                    print(f"Balance: {self.coin_info.balance:.1f}, Wins: {self.coin_info.n_win}, Losses: {self.coin_info.n_loss}")
+                    print(f"Balance: {self.coin_info.balance:.1f}, Wins: {self.coin_info.n_win}, Losses: {self.coin_info.n_loss}, Break-even: {self.coin_info.n_be}")
                     print("Returning to main WS for new signals.", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
                 else:
                     if datetime.now().minute % 5 == 0:
