@@ -28,12 +28,11 @@ for output_file in output_files:
         print(f"Error checking/killing processes for {output_file}: {e}")
 
 for k, model_option in enumerate(models):
+    if model_option == 'l6mod': continue
     # Write model_option to input.txt
     with open('input.txt', 'w') as f:
         f.write(model_option + '\n')
     
-    if model_option[0]=='l':side='long'
-    if model_option[0]=='s':side='short'
     command = f'python -u trade_live.py < input.txt >> {output_files[k]} 2>&1 &'
     print(command)
     os.system(command)
