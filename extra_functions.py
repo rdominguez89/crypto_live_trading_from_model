@@ -174,12 +174,12 @@ def check_position(self, candle):
         if self.side == 'long': 
             self.sl = round(self.op, self.price_presition)
             if trade_real: self.stop_loss_order = post_stop_loss_order(self, 'SELL')
-        msg = f'Moved to BE, SL adjusted to {self.sl}.'
+        msg = f'Moved to BE {self.training_type}, SL adjusted to {self.sl}.'
         print(msg, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         if send_tel_messages: send_telegram_message_HTML(msg)
     return False, None
 
-def set_open_position(self):
+def set_open_position(self): 
     candle = fetch_candles(self.coin,self.pair_trading,'1m',1)
     if self.side == 'short':
         open_price = float(candle['high'].iloc[0])
@@ -194,8 +194,8 @@ def set_open_position(self):
         self.sl = round(self.op - self.range_value_target, self.price_presition)
         self.be = round(self.op + self.fract_ratio*self.ratio * self.range_value_target, self.price_presition)
     self.size = max([round((10 / self.range_value_target), self.pos_presition),round((self.percentage * self.balance / self.range_value_target), self.pos_presition)])  
-    print(f'Placing limit order {self.side}: Open : {self.op} TP : {self.tp} SL : {self.sl} Ratio : {self.ratio}, Size : {self.size}, Range Value : {self.range_value_target:.2f}. {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
-    msg = f'Placing limit order {self.side}\nOpen : {self.op}\nTP : {self.tp}\nSL : {self.sl}\nSize : {self.size}'
+    print(f'Placing limit order {self.side}: Open : {self.op} TP : {self.tp} SL : {self.sl} BE : {self.be} Ratio : {self.ratio}, Size : {self.size}, Range Value : {self.range_value_target:.2f}. {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+    msg = f'Placing limit order {self.training_type} {self.side}\nOpen : {self.op}\nTP : {self.tp}\nSL : {self.sl}\nSize : {self.size}'
     if send_tel_messages: send_telegram_message_HTML(msg)
 
 def add_ny_time_features(df, features_columns, use_NY_trading_hour, use_day_month):

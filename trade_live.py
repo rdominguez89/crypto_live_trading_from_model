@@ -166,7 +166,7 @@ class WebSocketManager:
                         if (self.coin_info.side == 'short' and trade_real): self.coin_info.close_limit_order = post_limit_order(self.coin_info, self.coin_info.tp, 'BUY')
                         self.coin_info.filled = True
                         self.coin_info.waiting_for_fill = False
-                        msg = f"Position filled "
+                        msg = f"Position filled {self.coin_info.training_type}"
                         print(msg, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                         if send_tel_messages: send_telegram_message_HTML(msg)
                     elif status == 'UNKNOWN' or status == 'CANCELLED'or status == 'CANCELED':
@@ -197,7 +197,7 @@ class WebSocketManager:
                         else:
                             self.coin_info.balance += self.coin_info.size * (self.coin_info.range_value_target * self.coin_info.ratio)
                         self.coin_info.n_win += 1
-                        msg = f'Position closed with profit.'
+                        msg = f'Position closed with profit. {self.coin_info.training_type}'
                         print(msg, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                     else:
                         if trade_real: 
@@ -207,10 +207,10 @@ class WebSocketManager:
                             self.coin_info.balance -= (self.coin_info.size * self.coin_info.range_value_target + commision_sl)
                         if not self.coin_info.moved_to_be: 
                             self.coin_info.n_loss += 1
-                            msg = f'Position closed with loss.'
+                            msg = f'Position closed with loss. {self.coin_info.training_type}'
                             print(msg, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                         else: 
-                            msg = f'Position closed at BE.'
+                            msg = f'Position closed at BE. {self.coin_info.training_type}'
                             self.coin_info.n_be += 1
                             print(msg, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                     if send_tel_messages: send_telegram_message_HTML(msg)
