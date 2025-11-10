@@ -195,7 +195,7 @@ def set_open_position(self):
         self.be = round(self.op + self.fract_ratio*self.ratio * self.range_value_target, self.price_presition)
     self.size = max([round((10 / self.range_value_target), self.pos_presition),round((self.percentage * self.balance / self.range_value_target), self.pos_presition)])  
     print(f'Placing limit order {self.side}: Open : {self.op} TP : {self.tp} SL : {self.sl} BE : {self.be} Ratio : {self.ratio}, Size : {self.size}, Range Value : {self.range_value_target:.2f}. {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
-    msg = f'Placing limit order {self.training_type} {self.side}\nOpen : {self.op}\nTP : {self.tp}\nSL : {self.sl}\nSize : {self.size}'
+    msg = f'Placing limit order {self.training_type} {self.side}\nOpen : {self.op}\nTP : {self.tp}\nSL : {self.sl}\nBE : {self.be}\nSize : {self.size}'
     if send_tel_messages: send_telegram_message_HTML(msg)
 
 def add_ny_time_features(df, features_columns, use_NY_trading_hour, use_day_month):
