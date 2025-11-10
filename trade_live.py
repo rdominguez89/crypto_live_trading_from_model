@@ -104,7 +104,7 @@ class WebSocketManager:
                             self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.open_limit_order)
                             self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.stop_loss_order)
                         self.coin_info.in_position, self.coin_info.waiting_for_fill, self.coin_info.filled = False, False, False
-                        msg = f"Position order cancelled due to change in prediction."
+                        msg = f"Position  {self.coin_info.training_type} order cancelled due to change in prediction."
                         print(msg+' Returning to main WS for new signals.', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                         if send_tel_messages: send_telegram_message_HTML(msg)
                 elif current_prediction_favour and self.coin_info.waiting_for_fill:
@@ -114,7 +114,7 @@ class WebSocketManager:
                         if trade_real:
                             self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.open_limit_order)
                             self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.stop_loss_order)
-                        msg = f"Position order modified as it was not filled and prediction still hold."
+                        msg = f"Position  {self.coin_info.training_type} order modified as it was not filled and prediction still hold."
                         print(msg+' Updationg entry.', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                         if send_tel_messages: send_telegram_message_HTML(msg)
                         set_open_position(self.coin_info)
