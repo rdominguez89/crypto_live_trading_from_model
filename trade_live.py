@@ -95,9 +95,9 @@ class WebSocketManager:
             calculate_features(self.coin_info)
             if self.coin_info.in_position:
                 current_prediction_favour = open_position_logic(self.coin_info, False)
+                candle = fetch_candles(self.coin_info.coin,self.coin_info.pair_trading,'1m',2)
                 if not current_prediction_favour:
                     print(f'Current prediction no longer favours position {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
-                    candle = fetch_candles(self.coin_info.coin,self.coin_info.pair_trading,'1m',2)
                     if self.coin_info.waiting_for_fill and ((self.coin_info.side == 'long' and float(candle['low'].min())>self.coin_info.op) or (self.coin_info.side == 'short' and float(candle['high'].max())<self.coin_info.op)):
                         #cancel order
                         if trade_real:
@@ -107,7 +107,7 @@ class WebSocketManager:
                         msg = f"Position  {self.coin_info.training_type} order cancelled due to change in prediction."
                         print(msg+' Returning to main WS for new signals.', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                         if send_tel_messages: send_telegram_message_HTML(msg)
-                elif current_prediction_favour and self.coin_info.waiting_for_fill:
+                elif current_prediction_favour and self.coin_info.waiting_for_fill and ((self.coin_info.side == 'long' and float(candle['low'].min())>self.coin_info.op) or (self.coin_info.side == 'short' and float(candle['high'].max())<self.coin_info.op)):
                     if self.coin_info.side == 'short': new_open = round(new_candle[4] + self.coin_info.shift_open*self.coin_info.range_value_target, self.coin_info.price_presition)
                     if self.coin_info.side == 'long': new_open = round(new_candle[4] - self.coin_info.shift_open*self.coin_info.range_value_target, self.coin_info.price_presition)
                     if (self.coin_info.side == 'short' and new_open > self.coin_info.op) or (self.coin_info.side == 'long' and new_open < self.coin_info.op):
