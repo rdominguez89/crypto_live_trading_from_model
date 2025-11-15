@@ -131,6 +131,7 @@ class WebSocketManager:
                 open_position_logic(self.coin_info)
                 if self.coin_info.in_position and not self.coin_info.waiting_for_fill:
                     set_open_position(self.coin_info)
+                    self.coin_info.open_time = self.coin_info.df['timestamp'].iloc[-1]
                     if trade_real:
                         if self.coin_info.side == 'long':
                             self.coin_info.stop_loss_order = post_stop_loss_order(self.coin_info, 'SELL')
@@ -155,7 +156,7 @@ class WebSocketManager:
                 float(kline['c']),
                 float(kline['v'])
             ]
-            if not self.coin_info.filled and int(0.001*kline['t']) > int(0.001*self.coin_info.df['timestamp'].iloc[-1]): #fix to call when opens
+            if not self.coin_info.filled and int(0.001*kline['t']) > int(0.001*self.coin_info.open_time): #fix to call when opens
                 if (self.coin_info.side == 'long' and new_candle[3] < self.coin_info.op) or (self.coin_info.side == 'short' and new_candle[2] > self.coin_info.op):
                     if trade_real:
                         status = check_fill_position(self.coin_info, self.coin_info.open_limit_order)
