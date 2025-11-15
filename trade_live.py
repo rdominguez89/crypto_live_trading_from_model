@@ -155,7 +155,7 @@ class WebSocketManager:
                 float(kline['c']),
                 float(kline['v'])
             ]
-            if not self.coin_info.filled and kline['t'] > self.coin_info.df['timestamp'].iloc[-1]:
+            if not self.coin_info.filled and int(0.001*kline['t']) > int(0.001*self.coin_info.df['timestamp'].iloc[-1]): #fix to call when opens
                 if (self.coin_info.side == 'long' and new_candle[3] < self.coin_info.op) or (self.coin_info.side == 'short' and new_candle[2] > self.coin_info.op):
                     if trade_real:
                         status = check_fill_position(self.coin_info, self.coin_info.open_limit_order)
