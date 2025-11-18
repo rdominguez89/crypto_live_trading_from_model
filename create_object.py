@@ -97,10 +97,10 @@ class def_coin:
         # Feature names
         self.df, self.tp, self.sl, self.op = None, None, None, None
         self.balance, self.n_win, self.n_loss, self.n_be = 1000.0, 0, 0, 0
-        if self.training_type == 'l6mod': self.n_win, self.n_loss, self.n_be  = 7, 23, 2
+        if self.training_type == 'l6mod': self.n_win, self.n_loss, self.n_be  = 7, 27, 2
         if self.training_type == 'l7mod': self.n_win, self.n_loss, self.n_be = 1, 13, 2
-        if self.training_type == 'l8mod': self.n_win, self.n_loss, self.n_be = 2, 14, 2
-        if self.training_type == 'l15mod': self.n_win, self.n_loss, self.n_be = 1, 16, 1
+        if self.training_type == 'l8mod': self.n_win, self.n_loss, self.n_be = 2, 25, 2
+        if self.training_type == 'l15mod': self.n_win, self.n_loss, self.n_be = 1, 21, 3
         self.size = 0
         self.filled = False
         self.first_candle = False
