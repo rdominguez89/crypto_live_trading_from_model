@@ -41,18 +41,27 @@ def post_trailing_order(coin_info, side_h, size, act_price, trailing, side, max_
     raise Exception("Max retries exceeded for post_trailing_order")
 
 def post_stop_loss_order(self, side_h, max_retries=10):
+    """
+    Place a stop loss order using Binance's new Algo Order API (as of Dec 9, 2025).
+    This uses the /fapi/v1/algoOrder endpoint with algoType=CONDITIONAL.
+    """
     for attempt in range(max_retries):
         try:
-            stop_market_info = self.client.futures_create_order(
-                symbol=self.coin + self.pair_trading,
-                side=side_h,
-                positionSide=self.side,
-                type='STOP_MARKET',
-                stopPrice=self.sl,
-                closePosition=True,
-                workingType='MARK_PRICE',
-                priceProtect=True
-            )
+            # Use the new Algo Order API endpoint
+            params = {
+                'algoType': 'CONDITIONAL',
+                'symbol': self.coin + self.pair_trading,
+                'side': side_h,
+                'positionSide': self.side,
+                'type': 'STOP_MARKET',
+                'triggerPrice': str(self.sl),
+                'quantity': str(self.size),
+                'workingType': 'MARK_PRICE',
+                'priceProtect': 'TRUE'
+            }
+            
+            # Use _request_futures_api like other futures methods
+            stop_market_info = self.client._request_futures_api('post', 'algoOrder', True, data=params)
             return stop_market_info
         except Exception as e:
             print(f"Error placing stop loss order (attempt {attempt+1}): {e}")

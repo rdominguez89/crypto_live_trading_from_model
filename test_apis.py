@@ -22,6 +22,34 @@ def post_limit_order_test(client, coin, pair_trading, side, size, price, side_h,
             time.sleep(1)
     raise Exception("Max retries exceeded for post_limit_order")
 
+def post_stop_loss_order_test(client, coin, pair_trading, side, size, price, side_h, max_retries=5):
+    """
+    Place a stop loss order using Binance's new Algo Order API (as of Dec 9, 2025).
+    This uses the /fapi/v1/algoOrder endpoint with algoType=CONDITIONAL.
+    """
+    for attempt in range(max_retries):
+        try:
+            # Use the new Algo Order API endpoint
+            params = {
+                'algoType': 'CONDITIONAL',
+                'symbol': coin + pair_trading,
+                'side': side_h,
+                'positionSide': side,
+                'type': 'STOP_MARKET',
+                'triggerPrice': str(price),
+                'quantity': str(size),
+                'workingType': 'MARK_PRICE',
+                'priceProtect': 'TRUE'
+            }
+            
+            # Use _request_futures_api like other futures methods
+            stop_market_info = client._request_futures_api('post', 'algoOrder', True, data=params)
+            return stop_market_info
+        except Exception as e:
+            print(f"Error placing stop loss order (attempt {attempt+1}): {e}")
+            time.sleep(5 if attempt >= 5 else 1)
+    raise Exception("Max retries exceeded for post_stop_loss_order")
+
 def cancel_orders_test(client, coin, pair_trading, order, max_retries=5):
     for attempt in range(max_retries):
         try:
@@ -45,8 +73,9 @@ def set_open_position_test(coin,pair_trading,side):
     size = 0.005
     print(f'Placing limit order {side}: Open : {op}. {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
     msg = f'Placing limit order test'
-    send_telegram_message_HTML(msg)
+    #send_telegram_message_HTML(msg)
     open_limit_order = post_limit_order_test(client, coin, pair_trading, side, size, op, 'BUY')
+    stop_loss_order = post_stop_loss_order_test(client, coin, pair_trading, side, size, op, 'SELL')
     time.sleep(5)
     cancel_order = cancel_orders_test(client, coin, pair_trading, open_limit_order, max_retries=5)
 
