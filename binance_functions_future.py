@@ -116,6 +116,29 @@ def cancel_orders(self, order, max_retries=5):
             time.sleep(1)
     return []
 
+def cancel_algo_orders(self, order, max_retries=5):
+    """
+    Cancel an algo order using Binance's Algo Order API (as of Dec 9, 2025).
+    This uses the DELETE /fapi/v1/algoOrder endpoint.
+    """
+    for attempt in range(max_retries):
+        try:
+            params = {
+                'symbol': self.coin + self.pair_trading,
+                'algoId': order['algoId']  # Algo orders use algoId instead of orderId
+            }
+            # Use _request_futures_api with delete method
+            cancel_order_info = self.client._request_futures_api('delete', 'algoOrder', True, data=params)
+            return cancel_order_info
+        except Exception as e:
+            print(f"Error cancelling algo order (attempt {attempt+1}): {e}")
+            if hasattr(e, 'code') and e.code == -2011: # type: ignore
+                print("Algo order not found", e)
+                return []
+            time.sleep(1)
+    return []
+
+
 def get_current_size(coin_info,n_try):
     futures = get_info_position_2(coin_info,n_try)
     open_pos = []

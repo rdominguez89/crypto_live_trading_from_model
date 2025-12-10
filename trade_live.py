@@ -102,7 +102,7 @@ class WebSocketManager:
                         #cancel order
                         if trade_real:
                             self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.open_limit_order)
-                            self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.stop_loss_order)
+                            self.coin_info.order_cancel = cancel_algo_orders(self.coin_info, self.coin_info.stop_loss_order)
                         self.coin_info.in_position, self.coin_info.waiting_for_fill, self.coin_info.filled = False, False, False
                         msg = f"Position  {self.coin_info.training_type} order cancelled due to change in prediction."
                         print(msg+' Returning to main WS for new signals.', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
@@ -113,7 +113,7 @@ class WebSocketManager:
                     if (self.coin_info.side == 'short' and new_open > self.coin_info.op) or (self.coin_info.side == 'long' and new_open < self.coin_info.op):
                         if trade_real:
                             self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.open_limit_order)
-                            self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.stop_loss_order)
+                            self.coin_info.order_cancel = cancel_algo_orders(self.coin_info, self.coin_info.stop_loss_order)
                         msg = f"Position  {self.coin_info.training_type} order modified as it was not filled and prediction still hold."
                         print(msg+' Updationg entry.', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                         if send_tel_messages: send_telegram_message_HTML(msg)
@@ -173,7 +173,7 @@ class WebSocketManager:
                     elif status == 'UNKNOWN' or status == 'CANCELLED'or status == 'CANCELED':
                         if trade_real:
                             self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.open_limit_order) # add cancel sl
-                            self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.stop_loss_order)
+                            self.coin_info.order_cancel = cancel_algo_orders(self.coin_info, self.coin_info.stop_loss_order)
                         self.coin_info.in_position, self.coin_info.waiting_for_fill, self.coin_info.filled = False, False, False
                         msg = f"Position order not found (user modification?), returning to wait for new entry."
                         print(status,msg+' Returning to main WS for new signals.', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
@@ -182,7 +182,7 @@ class WebSocketManager:
                     #cancel order
                     if trade_real:
                         self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.open_limit_order) # add cancel sl
-                        self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.stop_loss_order)
+                        self.coin_info.order_cancel = cancel_algo_orders(self.coin_info, self.coin_info.stop_loss_order)
                     self.coin_info.in_position, self.coin_info.waiting_for_fill, self.coin_info.filled = False, False, False
                     msg = f"Position order cancelled due to reached tp before fill."
                     print(msg+' Returning to main WS for new signals.', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
@@ -193,7 +193,7 @@ class WebSocketManager:
                     self.coin_info.in_position, self.coin_info.waiting_for_fill, self.coin_info.filled = False, False, False
                     if win:
                         if trade_real: 
-                            self.coin_info.order_cancel = cancel_orders(self.coin_info, self.coin_info.stop_loss_order)
+                            self.coin_info.order_cancel = cancel_algo_orders(self.coin_info, self.coin_info.stop_loss_order)
                             self.coin_info.balance = get_asset_balance(self.coin_info, self.coin_info.pair_trading)
                         else:
                             self.coin_info.balance += self.coin_info.size * (self.coin_info.range_value_target * self.coin_info.ratio)

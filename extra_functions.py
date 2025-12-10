@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-from binance_functions_future import cancel_orders, post_stop_loss_order
+from binance_functions_future import cancel_orders, cancel_algo_orders, post_stop_loss_order
 import numpy as np
 from datetime import datetime
 import torch
@@ -167,7 +167,7 @@ def check_position(self, candle):
         if self.side == 'short': return True, current_low <= self.tp
     if not self.moved_to_be and ((self.side == 'long' and current_high >= self.be) or (self.side == 'short' and current_low <= self.be)):    
         self.moved_to_be = True
-        if trade_real: self.order_cancel = cancel_orders(self, self.stop_loss_order)
+        if trade_real: self.order_cancel = cancel_algo_orders(self, self.stop_loss_order)
         if self.side == 'short': 
             self.sl = round(self.op, self.price_presition)
             if trade_real: self.stop_loss_order = post_stop_loss_order(self, 'BUY')
