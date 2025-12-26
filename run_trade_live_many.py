@@ -2,7 +2,7 @@ import os
 import time
 import subprocess
 
-models = ['l7mod','l8mod','l15mod', 'l6mod']
+models = ['l7mod','l8mod', 'l6mod']
 output_files = []
 for model_option in models:
     if model_option[0]=='l':side='long'
