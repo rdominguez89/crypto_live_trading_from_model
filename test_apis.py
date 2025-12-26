@@ -97,6 +97,7 @@ def set_open_position_test(coin,pair_trading,side):
     print(f'Placing limit order {side}: Open : {op}. {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
     msg = f'Placing limit order test'
     #send_telegram_message_HTML(msg)
+    close_limit_order = post_limit_order_test(client, coin, pair_trading, 'SHORT', size, op, 'BUY') #close short
     open_limit_order = post_limit_order_test(client, coin, pair_trading, side, size, op, 'BUY')
     stop_loss_order = post_stop_loss_order_test(client, coin, pair_trading, side, size, op, 'SELL')
     time.sleep(5)

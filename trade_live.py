@@ -157,17 +157,21 @@ class WebSocketManager:
                 float(kline['v'])
             ]
             if not self.coin_info.filled and int(0.001*kline['t']) > int(0.001*self.coin_info.open_time): #fix to call when opens
-                if (self.coin_info.side == 'long' and new_candle[3] < self.coin_info.op) or (self.coin_info.side == 'short' and new_candle[2] > self.coin_info.op):
+                if (self.coin_info.side == 'long' and new_candle[3] <= self.coin_info.op) or (self.coin_info.side == 'short' and new_candle[2] >= self.coin_info.op):
                     if trade_real:
                         status = check_fill_position(self.coin_info, self.coin_info.open_limit_order)
                     else:
                         status = 'FILLED'
-                    if status == 'FILLED':
+                    if status == 'FILLED' or (status == 'PARTIALLY_FILLED' and (((datetime.fromtimestamp(kline['t']/1000).minute + 1) % 15 == 0 and self.coin_info.timeframe == '15m') or (datetime.fromtimestamp(kline['t']/1000).minute + 1) % 30 == 0 and self.coin_info.timeframe == '30m')):
                         if (self.coin_info.side == 'long' and trade_real): self.coin_info.close_limit_order = post_limit_order(self.coin_info, self.coin_info.tp, 'SELL')
                         if (self.coin_info.side == 'short' and trade_real): self.coin_info.close_limit_order = post_limit_order(self.coin_info, self.coin_info.tp, 'BUY')
+                        if trade_real and status == 'PARTIALLY_FILLED':
+                            self.coin_info.open_limit_order = cancel_orders(self.coin_info, self.coin_info.open_limit_order)                            
                         self.coin_info.filled = True
                         self.coin_info.waiting_for_fill = False
-                        msg = f"Position filled {self.coin_info.training_type}"
+                        msg_status = 'filled'
+                        if status == 'PARTIALLY_FILLED': msg_status = 'partially filled'
+                        msg = f"Position {msg_status} {self.coin_info.training_type}"
                         print(msg, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                         if send_tel_messages: send_telegram_message_HTML(msg)
                     elif status == 'UNKNOWN' or status == 'CANCELLED'or status == 'CANCELED':
